@@ -1,108 +1,1364 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Subscription Price Tracker</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-            --bg: #f5f7fa; --surface: #ffffff; --surface2: #f0f2f7; --border: #e2e6ef;
-            --text: #1a1d2e; --muted: #7b86a3; --accent: #5b52e8;
-            --green: #059669; --green-bg: rgba(5,150,105,0.08);
-            --red: #dc2626; --red-bg: rgba(220,38,38,0.07);
-            --shadow: 0 1px 3px rgba(0,0,0,.06);
-            --shadow-md: 0 4px 20px rgba(0,0,0,.08);
-            --radius: 12px;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            font-size: 14px;
-            -webkit-font-smoothing: antialiased;
-        }
-        .hdr {
-            background: linear-gradient(135deg, #fff 0%, #f8f7ff 100%);
-            border-bottom: 1px solid var(--border);
-            padding: 16px 28px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            position: sticky;
-            top: 0;
-            z-index: 200;
-            box-shadow: 0 1px 8px rgba(0,0,0,.05);
-        }
-        .hdr-icon {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #5b52e8 0%, #8b5cf6 50%, #a78bfa 100%);
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-            box-shadow: 0 3px 12px rgba(91,82,232,.35);
-        }
-        .hdr h1 {
-            font-size: 19px;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            color: var(--text);
-        }
-        .hdr-sub {
-            font-size: 11px;
-            color: var(--muted);
-            margin-top: 1px;
-            letter-spacing: 0.01em;
-        }
-        .upd {
-            font-size: 10.5px;
-            color: var(--muted);
-            background: var(--surface2);
-            padding: 5px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            font-weight: 600;
-            letter-spacing: 0.01em;
-            transition: all .2s;
-        }
-        .content {
-            padding: 40px 28px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: var(--text);
-        }
-        p {
-            color: var(--muted);
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Subscription Price Tracker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f7fa;--surface:#ffffff;--surface2:#f0f2f7;--border:#e2e6ef;
+  --text:#1a1d2e;--muted:#7b86a3;--accent:#5b52e8;
+  --green:#059669;--green-bg:rgba(5,150,105,0.08);
+  --red:#dc2626;--red-bg:rgba(220,38,38,0.07);
+  --shadow:0 1px 3px rgba(0,0,0,.06);
+  --shadow-md:0 4px 20px rgba(0,0,0,.08);
+  --radius:12px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter','SF Pro Display','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(135deg,#fff 0%,#f8f7ff 100%);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:200;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.hdr-icon{width:38px;height:38px;background:linear-gradient(135deg,#5b52e8 0%,#8b5cf6 50%,#a78bfa 100%);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 3px 12px rgba(91,82,232,.35)}
+.hdr h1{font-size:19px;font-weight:800;letter-spacing:-.03em;color:var(--text)}
+.hdr-sub{font-size:11px;color:var(--muted);margin-top:1px;letter-spacing:.01em}
+.upd{font-size:10.5px;color:var(--muted);background:var(--surface2);padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-weight:600;letter-spacing:.01em;transition:all .2s}
+
+/* ── TABS ── */
+.tabs{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 28px 0;display:flex;flex-direction:column;gap:0;position:sticky;top:64px;z-index:190}
+.tab-group{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.tab-group::-webkit-scrollbar{display:none}
+#tab-cats{gap:6px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+#tab-items{padding:4px 0 0}
+.cat-pill{padding:5px 14px;border:1.5px solid var(--border);border-radius:20px;background:#fff;color:var(--muted);cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap;transition:all .15s;letter-spacing:.02em}
+.cat-pill:hover{border-color:var(--accent);color:var(--text)}
+.cat-pill.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(91,82,232,.25)}
+.tab{padding:10px 14px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-weight:500;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all .15s;display:flex;align-items:center;gap:5px;letter-spacing:.01em;position:relative}
+.tab:hover{color:var(--text);background:rgba(91,82,232,.04);border-radius:8px 8px 0 0}
+.tab.active{font-weight:700;background:linear-gradient(180deg,var(--brand-bg,rgba(91,82,232,.06)) 0%,transparent 100%);border-radius:8px 8px 0 0}
+
+/* ── CONTROLS ── */
+.ctrl{padding:12px 28px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:115px;z-index:180}
+.si{padding:8px 14px;border:1.5px solid var(--border);border-radius:9px;background:#fff;color:var(--text);font-size:12.5px;outline:none;min-width:190px;transition:all .15s}
+.si:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(91,82,232,.1)}
+.si::placeholder{color:#b0b8cc}
+select.si{cursor:pointer;min-width:150px;-webkit-appearance:none;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237b86a3' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center}
+.cright{margin-left:auto;display:flex;gap:8px}
+.btn{padding:8px 16px;border-radius:9px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all .15s;letter-spacing:.01em}
+.btn-p{background:linear-gradient(135deg,#5b52e8,#7c6af7);color:#fff;box-shadow:0 2px 10px rgba(91,82,232,.3)}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(91,82,232,.4)}
+.btn-s{background:#fff;color:var(--text);border:1.5px solid var(--border)}
+.btn-s:hover{border-color:var(--accent);color:var(--accent);background:rgba(91,82,232,.03)}
+
+/* ── STATS ── */
+.stats{padding:10px 28px;display:flex;gap:10px;background:var(--surface);border-bottom:1px solid var(--border);font-size:11px;flex-wrap:wrap;align-items:center}
+.stat-item{display:flex;gap:6px;align-items:center;background:var(--surface2);padding:6px 14px;border-radius:10px;border:1px solid var(--border);transition:all .15s}
+.stat-item:hover{box-shadow:var(--shadow)}
+.stat-lbl{color:var(--muted);font-weight:500}
+.stat-val{font-weight:700}
+.stat-val.g{color:var(--green)}
+.stat-val.r{color:var(--red)}
+.legend{margin-left:auto;display:flex;gap:14px;font-size:11px;align-items:center;color:var(--muted)}
+.leg-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+.leg-g{background:var(--green)}
+.leg-r{background:var(--red)}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;padding:20px 28px 48px;background:var(--bg)}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:500px;border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.07),0 1px 4px rgba(0,0,0,.04);background:var(--surface)}
+th{padding:13px 20px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:linear-gradient(180deg,#f4f5fa 0%,#eef0f7 100%);border-bottom:2px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;transition:color .12s}
+th:hover{color:var(--accent)}
+th:first-child{border-radius:var(--radius) 0 0 0}
+th:last-child{border-radius:0 var(--radius) 0 0}
+th.sa::after{content:' ↑';color:var(--brand,var(--accent));font-weight:900}
+th.sd::after{content:' ↓';color:var(--brand,var(--accent));font-weight:900}
+td{padding:12px 20px;border-bottom:1px solid #eef1f6;white-space:nowrap;font-size:13px;background:var(--surface);transition:background .1s}
+tr:nth-child(even) td{background:#fafbfe}
+tr:hover td{background:#eef0ff !important}
+tr:last-child td{border-bottom:none}
+tr:last-child td:first-child{border-radius:0 0 0 var(--radius)}
+tr:last-child td:last-child{border-radius:0 0 var(--radius) 0}
+.cc{display:flex;align-items:center;gap:9px;font-weight:600;color:var(--text)}
+.fl{font-size:19px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.08))}
+.rtag{font-size:8.5px;color:var(--muted);background:#eef1f8;padding:2px 7px;border-radius:4px;margin-left:3px;font-weight:600;border:1px solid var(--border);text-transform:uppercase;letter-spacing:.03em}
+.pusd{font-weight:800;font-size:14px;letter-spacing:-.02em}
+.ploc{font-size:10px;color:var(--muted);margin-top:2px;font-weight:400;letter-spacing:.01em}
+.na{color:#c5cce0;font-style:italic;font-size:11px}
+.no-res{text-align:center;padding:80px;color:var(--muted);font-size:14px}
+.annual-note{font-size:9px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;margin-top:1px}
+
+/* ── HIGHLIGHT CELLS ── */
+.cg{background:var(--green-bg) !important;border-left:3px solid var(--green) !important}
+.cg .pusd{color:var(--green)}
+.cr{background:var(--red-bg) !important;border-left:3px solid var(--red) !important}
+.cr .pusd{color:var(--red)}
+
+/* ── MODAL ── */
+.mo{display:none;position:fixed;inset:0;background:rgba(15,17,35,.5);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center}
+.mo.open{display:flex}
+.mc{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px;width:500px;max-width:95vw;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.mc h2{font-size:17px;margin-bottom:20px;font-weight:800;color:var(--text);letter-spacing:-.02em}
+.fg{margin-bottom:16px}
+.fg label{display:block;font-size:10.5px;color:var(--muted);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.fg input,.fg select{width:100%;padding:9px 14px;border:1.5px solid var(--border);border-radius:9px;background:#fff;color:var(--text);font-size:13px;outline:none;transition:all .15s}
+.fg input:focus,.fg select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(91,82,232,.1)}
+.tier-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.tier-row input{flex:1}
+.tier-row select{width:130px}
+.bicon{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.bicon:hover{border-color:var(--red);color:var(--red);background:rgba(220,38,38,.05)}
+.mf{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}
+.hint{font-size:10px;color:var(--muted);margin-top:8px;padding:8px 12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);line-height:1.4}
+.price-grid{display:grid;gap:8px;margin-top:8px}
+.price-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
+.price-row label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+
+/* ── FX BADGE ── */
+.fx-live{background:rgba(5,150,105,.1)!important;color:#059669!important;border-color:rgba(5,150,105,.2)!important}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .hdr{padding:12px 16px}
+  .hdr h1{font-size:16px}
+  .tabs{padding:6px 16px 0}
+  .cat-pill{padding:4px 10px;font-size:10px}
+  .tab{padding:8px 10px;font-size:11px}
+  .ctrl{padding:10px 16px}
+  .stats{padding:8px 16px}
+  .tbl-wrap{padding:12px 16px 40px}
+  td,th{padding:10px 14px}
+  .fl{font-size:16px}
+  .pusd{font-size:13px}
+}
+</style>
 </head>
 <body>
-    <div class="hdr">
-        <div class="hdr-icon">💰</div>
-        <div>
-            <h1>Global Subscription Price Tracker</h1>
-            <div class="hdr-sub">Price comparison across countries (USD equivalent)</div>
-        </div>
-        <div style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
-            <div id="fx-badge" class="upd">FX: Mar 2026</div>
-            <div class="upd">Prices: Mar 2026</div>
-        </div>
+
+<div class="hdr">
+  <div class="hdr-icon">🌍</div>
+  <div>
+    <h1>Global Subscription Tracker</h1>
+    <div class="hdr-sub">Price comparison across countries · USD equivalent · Exchange rates approx. March 2026</div>
+  </div>
+  <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+    <div id="fx-badge" class="upd">📅 FX: Mar 2026</div>
+    <div class="upd">✅ Prices: Mar 2026</div>
+  </div>
+</div>
+
+<div class="tabs" id="tabs">
+  <div class="tab-group" id="tab-cats"></div>
+  <div class="tab-group" id="tab-items"></div>
+</div>
+
+<div class="ctrl">
+  <input type="text" class="si" id="search" placeholder="🔍 Search country...">
+  <select class="si" id="regionFilter">
+    <option value="">All Regions</option>
+    <option value="Americas">Americas</option>
+    <option value="Europe">Europe</option>
+    <option value="Asia-Pacific">Asia-Pacific</option>
+    <option value="Middle East &amp; Africa">Middle East &amp; Africa</option>
+  </select>
+  <select class="si" id="tierFilter"><option value="">All Tiers</option></select>
+  <div class="cright">
+    <button class="btn btn-s" onclick="openAddCountry()">+ Country</button>
+    <button class="btn btn-p" onclick="openAddService()">+ Service</button>
+  </div>
+</div>
+
+<div class="stats" id="stats">
+  <div class="legend">
+    <span><span class="leg-dot leg-g"></span>Cheapest</span>
+    <span><span class="leg-dot leg-r"></span>Most Expensive</span>
+  </div>
+</div>
+
+<div class="tbl-wrap">
+  <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+</div>
+
+<!-- Add Service Modal -->
+<div class="mo" id="moService">
+  <div class="mc">
+    <h2>➕ Add New Service</h2>
+    <div class="fg"><label>Service Name</label><input id="ns-name" placeholder="e.g. Disney+"></div>
+    <div class="fg"><label>Emoji</label><input id="ns-emoji" placeholder="🎬" maxlength="4"></div>
+    <div class="fg">
+      <label>Category</label>
+      <select id="ns-cat">
+        <option>Streaming</option><option>Music</option><option>Cloud Storage</option>
+        <option>AI</option><option>Membership</option><option>Other</option>
+      </select>
     </div>
-    <div class="content">
-        <h2>Welcome to the Subscription Tracker</h2>
-        <p>This tool helps you compare subscription prices for popular services (Spotify, Netflix, YouTube Premium, etc.) across 80+ countries.</p>
-        <p>Full version coming soon...</p>
+    <div class="fg">
+      <label>Tiers</label>
+      <div id="ns-tiers">
+        <div class="tier-row">
+          <input placeholder="Tier name e.g. Individual" class="ti-name">
+          <select class="ti-bill"><option value="monthly">Monthly</option><option value="annual">Annual</option></select>
+          <button class="bicon" onclick="removeTier(this)">×</button>
+        </div>
+      </div>
+      <button class="btn btn-s" style="width:100%;margin-top:7px;font-size:11px" onclick="addTierRow()">+ Add Tier</button>
     </div>
+    <div class="mf">
+      <button class="btn btn-s" onclick="closeModal('moService')">Cancel</button>
+      <button class="btn btn-p" onclick="saveService()">Add Service</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Country Modal -->
+<div class="mo" id="moCountry">
+  <div class="mc">
+    <h2 id="moCountryTitle">🌍 Add Country Pricing</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="fg"><label>Country Name</label><input id="nc-name" placeholder="Brazil"></div>
+      <div class="fg"><label>Flag Emoji</label><input id="nc-flag" placeholder="🇧🇷" maxlength="4"></div>
+      <div class="fg"><label>Region</label>
+        <select id="nc-region">
+          <option>Americas</option><option>Europe</option>
+          <option>Asia-Pacific</option><option>Middle East &amp; Africa</option>
+        </select>
+      </div>
+      <div class="fg"><label>Currency Code</label><input id="nc-curr" placeholder="BRL" maxlength="5"></div>
+      <div class="fg"><label>Currency Symbol</label><input id="nc-sym" placeholder="R$" maxlength="5"></div>
+    </div>
+    <div class="fg">
+      <label>Prices (in local currency — leave blank if N/A)</label>
+      <div class="price-grid" id="nc-prices"></div>
+      <div class="hint">💡 Enter prices in local currency. The app converts to USD automatically.</div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-s" onclick="closeModal('moCountry')">Cancel</button>
+      <button class="btn btn-p" onclick="saveCountry()">Add Country</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── BRAND COLORS ─────────────────────────────────────────────────────────
+const BRANDS = {
+  spotify:  {color:'#1DB954', bg:'rgba(29,185,84,.10)',   emoji:'🎵'},
+  yt:       {color:'#FF0000', bg:'rgba(255,0,0,.08)',      emoji:'▶️'},
+  amazon:   {color:'#00A8E0', bg:'rgba(0,168,224,.10)',   emoji:'📦'},
+  chatgpt:  {color:'#10A37F', bg:'rgba(16,163,127,.10)',  emoji:'🤖'},
+  claude:   {color:'#D97757', bg:'rgba(217,119,87,.10)',  emoji:'🧠'},
+  grok:     {color:'#7C3AED', bg:'rgba(124,58,237,.09)',  emoji:'⚡'},
+  max:      {color:'#002BE7', bg:'rgba(0,43,231,.08)',    emoji:'🎬'},
+  goog1:    {color:'#4285F4', bg:'rgba(66,133,244,.10)',  emoji:'☁️'},
+  costco:   {color:'#005DAA', bg:'rgba(0,93,170,.10)',    emoji:'🛒'},
+  samsclub: {color:'#0067A0', bg:'rgba(0,103,160,.10)',   emoji:'🏪'},
+  tidal:    {color:'#0096D6', bg:'rgba(0,150,214,.10)',   emoji:'🎧'},
+  netflix:  {color:'#E50914', bg:'rgba(229,9,20,.09)',    emoji:'🎥'},
+  disney:   {color:'#113CCF', bg:'rgba(17,60,207,.09)',   emoji:'✨'},
+  appletv:  {color:'#555555', bg:'rgba(85,85,85,.09)',    emoji:'🍎'},
+  icloud:   {color:'#3478F6', bg:'rgba(52,120,246,.10)',  emoji:'🍏'},
+  ms365:    {color:'#0078D4', bg:'rgba(0,120,212,.09)',   emoji:'📊'},
+  hulu:     {color:'#1CE783', bg:'rgba(28,231,131,.09)',  emoji:'📺'},
+  grammarly:{color:'#15C39A', bg:'rgba(21,195,154,.10)', emoji:'✍️'},
+};
+function brand(id){ return BRANDS[id] || {color:'#5b52e8', bg:'rgba(91,82,232,.10)', emoji:'📋'}; }
+
+// ── EXCHANGE RATES (approx. March 2026, local → USD) ──────────────────────
+const FX = {
+  USD:1,EUR:1.09,GBP:1.27,CAD:0.74,AUD:0.64,INR:0.012,BRL:0.18,MXN:0.051,
+  JPY:0.0066,KRW:0.00072,SEK:0.093,NOK:0.093,DKK:0.15,CHF:1.13,PLN:0.25,
+  CZK:0.043,HUF:0.0027,TRY:0.028,ZAR:0.054,NGN:0.00065,EGP:0.020,
+  SAR:0.27,AED:0.27,SGD:0.74,HKD:0.13,TWD:0.031,THB:0.029,PHP:0.017,
+  IDR:0.000062,MYR:0.22,ARS:0.00093,CLP:0.0011,COP:0.00024,PEN:0.27,
+  NZD:0.59,ILS:0.27,QAR:0.27,MAD:0.10,KES:0.0077,GHS:0.066,
+  RON:0.22,HRK:0.14,BGN:0.56,CRC:0.0019,GTQ:0.13,DOP:0.017,
+  CNY:0.138,VND:0.000039,PKR:0.0036,BDT:0.0083,ISK:0.0072,
+  BOB:0.145,UYU:0.025,KWD:3.27,BHD:2.65,JOD:1.41
+};
+
+// ── DATA ──────────────────────────────────────────────────────────────────
+const D = {
+  lastUpdated:"March 2026",
+  services:[
+  // ─ SPOTIFY ─────────────────────────────────────────────────────────────
+  {id:"spotify",name:"Spotify",emoji:"🎵",cat:"Music",
+   tiers:[
+     {id:"individual",name:"Individual",billing:"monthly"},
+     {id:"duo",name:"Duo",billing:"monthly"},
+     {id:"family",name:"Family",billing:"monthly"},
+     {id:"student",name:"Student",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{individual:12.99,duo:17.99,family:19.99,student:5.99}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{individual:11.99,duo:14.99,family:16.99,student:5.99}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{individual:23.90,duo:29.90,family:36.90,student:11.90}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{individual:99,duo:129,family:159,student:49}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{individual:4499,duo:5999,family:7499,student:2249}},
+    {c:"Colombia",fl:"🇨🇴",r:"Americas",cur:"COP",sym:"$",p:{individual:18900,duo:24900,family:29900,student:9400}},
+    {c:"Chile",fl:"🇨🇱",r:"Americas",cur:"CLP",sym:"$",p:{individual:5990,duo:7490,family:8990,student:2990}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{individual:119,duo:159,family:189,student:59}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{individual:129,duo:169,family:199,student:64}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{individual:109,duo:139,family:169,student:54}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{individual:19.90,duo:25.90,family:29.90,student:9.90}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{individual:23.99,duo:29.99,family:34.99,student:11.99}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{individual:79.99,duo:99.99,family:119.99,student:39.99}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{individual:13.99,duo:18.99,family:22.99,student:7.99}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{individual:14.99,duo:19.99,family:23.99,student:7.99}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{individual:179,duo:239,family:299,student:89}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{individual:980,duo:1280,family:1580,student:480}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{individual:13900,duo:17900,family:21900,student:6900}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{individual:12.98,duo:16.98,family:20.98,student:6.49}},
+    {c:"Philippines",fl:"🇵🇭",r:"Asia-Pacific",cur:"PHP",sym:"₱",p:{individual:179,duo:239,family:299,student:99}},
+    {c:"Indonesia",fl:"🇮🇩",r:"Asia-Pacific",cur:"IDR",sym:"Rp",p:{individual:54990,duo:84990,family:109990}},
+    {c:"Thailand",fl:"🇹🇭",r:"Asia-Pacific",cur:"THB",sym:"฿",p:{individual:129,duo:189,family:239,student:69}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{individual:16.90,duo:20.90,family:24.90,student:8.90}},
+    {c:"Nigeria",fl:"🇳🇬",r:"Middle East & Africa",cur:"NGN",sym:"₦",p:{individual:1740,family:4390}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{individual:79.99,family:119.99,student:39.99}},
+    {c:"Egypt",fl:"🇪🇬",r:"Middle East & Africa",cur:"EGP",sym:"E£",p:{individual:69.99,family:179.99}},
+    {c:"Kenya",fl:"🇰🇪",r:"Middle East & Africa",cur:"KES",sym:"KSh",p:{individual:399,family:999}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Greece",fl:"🇬🇷",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Finland",fl:"🇫🇮",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Czech Republic",fl:"🇨🇿",r:"Europe",cur:"CZK",sym:"Kč",p:{individual:249,duo:319,family:389,student:124}},
+    {c:"Romania",fl:"🇷🇴",r:"Europe",cur:"RON",sym:"lei",p:{individual:29.99,duo:37.99,family:44.99,student:14.99}},
+    {c:"Hungary",fl:"🇭🇺",r:"Europe",cur:"HUF",sym:"Ft",p:{individual:2490,duo:3190,family:3890,student:1245}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{individual:21.99,duo:27.99,family:33.99,student:10.99}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{individual:21.99,duo:27.99,family:33.99,student:10.99}},
+    {c:"Israel",fl:"🇮🇱",r:"Middle East & Africa",cur:"ILS",sym:"₪",p:{individual:32.90,duo:41.90,family:49.90,student:16.45}},
+    {c:"Hong Kong",fl:"🇭🇰",r:"Asia-Pacific",cur:"HKD",sym:"HK$",p:{individual:68,duo:88,family:108,student:34}},
+    {c:"Taiwan",fl:"🇹🇼",r:"Asia-Pacific",cur:"TWD",sym:"NT$",p:{individual:149,duo:199,family:249,student:75}},
+    {c:"Vietnam",fl:"🇻🇳",r:"Asia-Pacific",cur:"VND",sym:"₫",p:{individual:59000,duo:79000,family:99000,student:29500}},
+    {c:"Pakistan",fl:"🇵🇰",r:"Asia-Pacific",cur:"PKR",sym:"Rs",p:{individual:599,duo:799,family:999,student:299}},
+    {c:"Bangladesh",fl:"🇧🇩",r:"Asia-Pacific",cur:"BDT",sym:"৳",p:{individual:250,duo:330,family:410,student:125}},
+    {c:"Peru",fl:"🇵🇪",r:"Americas",cur:"PEN",sym:"S/",p:{individual:18.90,duo:24.90,family:29.90,student:9.45}},
+    {c:"Costa Rica",fl:"🇨🇷",r:"Americas",cur:"CRC",sym:"₡",p:{individual:5999,duo:7999,family:9999,student:2999}},
+    {c:"Ecuador",fl:"🇪🇨",r:"Americas",cur:"USD",sym:"$",p:{individual:7.99,duo:10.49,family:12.99,student:3.99}},
+    {c:"Bolivia",fl:"🇧🇴",r:"Americas",cur:"USD",sym:"$",p:{individual:7.99,family:12.99}},
+    {c:"Paraguay",fl:"🇵🇾",r:"Americas",cur:"USD",sym:"$",p:{individual:7.99,family:12.99}},
+    {c:"Uruguay",fl:"🇺🇾",r:"Americas",cur:"USD",sym:"$",p:{individual:7.99,duo:10.49,family:12.99}},
+    {c:"Dominican Republic",fl:"🇩🇴",r:"Americas",cur:"DOP",sym:"RD$",p:{individual:499,family:799}},
+    {c:"Guatemala",fl:"🇬🇹",r:"Americas",cur:"GTQ",sym:"Q",p:{individual:59,family:94}},
+    {c:"Panama",fl:"🇵🇦",r:"Americas",cur:"USD",sym:"$",p:{individual:7.99,family:12.99}},
+    {c:"Luxembourg",fl:"🇱🇺",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{individual:19.90,duo:25.90,family:29.90,student:9.90}},
+    {c:"Slovakia",fl:"🇸🇰",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Slovenia",fl:"🇸🇮",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Croatia",fl:"🇭🇷",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Bulgaria",fl:"🇧🇬",r:"Europe",cur:"BGN",sym:"лв",p:{individual:19.99,duo:25.99,family:31.99,student:9.99}},
+    {c:"Estonia",fl:"🇪🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Latvia",fl:"🇱🇻",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Lithuania",fl:"🇱🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Cyprus",fl:"🇨🇾",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Malta",fl:"🇲🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,duo:14.99,family:17.99,student:5.99}},
+    {c:"Iceland",fl:"🇮🇸",r:"Europe",cur:"ISK",sym:"kr",p:{individual:2190,duo:2790,family:3390}},
+    {c:"Morocco",fl:"🇲🇦",r:"Middle East & Africa",cur:"MAD",sym:"MAD",p:{individual:49,family:129}},
+    {c:"Ghana",fl:"🇬🇭",r:"Middle East & Africa",cur:"GHS",sym:"₵",p:{individual:18,family:48}},
+    {c:"Tanzania",fl:"🇹🇿",r:"Middle East & Africa",cur:"USD",sym:"$",p:{individual:3.49,family:8.99}},
+    {c:"Uganda",fl:"🇺🇬",r:"Middle East & Africa",cur:"USD",sym:"$",p:{individual:3.49,family:8.99}},
+    {c:"Rwanda",fl:"🇷🇼",r:"Middle East & Africa",cur:"USD",sym:"$",p:{individual:3.49,family:8.99}},
+    {c:"Ivory Coast",fl:"🇨🇮",r:"Middle East & Africa",cur:"USD",sym:"$",p:{individual:3.49,family:8.99}},
+    {c:"Senegal",fl:"🇸🇳",r:"Middle East & Africa",cur:"USD",sym:"$",p:{individual:3.49,family:8.99}},
+    {c:"Jordan",fl:"🇯🇴",r:"Middle East & Africa",cur:"USD",sym:"$",p:{individual:7.99,family:12.99}},
+    {c:"Lebanon",fl:"🇱🇧",r:"Middle East & Africa",cur:"USD",sym:"$",p:{individual:7.99,family:12.99}},
+    {c:"Qatar",fl:"🇶🇦",r:"Middle East & Africa",cur:"QAR",sym:"QAR",p:{individual:29.99,family:49.99}},
+    {c:"Kuwait",fl:"🇰🇼",r:"Middle East & Africa",cur:"KWD",sym:"KD",p:{individual:2.99,family:4.99}},
+    {c:"Bahrain",fl:"🇧🇭",r:"Middle East & Africa",cur:"USD",sym:"$",p:{individual:7.99,family:12.99}},
+    {c:"Oman",fl:"🇴🇲",r:"Middle East & Africa",cur:"USD",sym:"$",p:{individual:7.99,family:12.99}},
+    {c:"Sri Lanka",fl:"🇱🇰",r:"Asia-Pacific",cur:"USD",sym:"$",p:{individual:3.49,family:8.99}},
+    {c:"Nepal",fl:"🇳🇵",r:"Asia-Pacific",cur:"USD",sym:"$",p:{individual:3.49,family:8.99}},
+    {c:"Cambodia",fl:"🇰🇭",r:"Asia-Pacific",cur:"USD",sym:"$",p:{individual:3.49,family:8.99}},
+    {c:"Myanmar",fl:"🇲🇲",r:"Asia-Pacific",cur:"USD",sym:"$",p:{individual:3.49,family:8.99}}
+  ]},
+  // ─ YOUTUBE PREMIUM ─────────────────────────────────────────────────────
+  {id:"yt",name:"YouTube Premium",emoji:"▶️",cat:"Streaming",
+   tiers:[
+     {id:"individual",name:"Individual",billing:"monthly"},
+     {id:"family",name:"Family",billing:"monthly"},
+     {id:"student",name:"Student",billing:"monthly"},
+     {id:"lite",name:"Lite (Ad-Free Only)",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{individual:13.99,family:22.99,student:7.99,lite:7.99}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{individual:17.99,family:29.99,student:9.99}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{individual:27.90,family:55.90}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{individual:129,family:199}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{individual:899,family:1599}},
+    {c:"Colombia",fl:"🇨🇴",r:"Americas",cur:"COP",sym:"$",p:{individual:18900,family:35900}},
+    {c:"Chile",fl:"🇨🇱",r:"Americas",cur:"CLP",sym:"$",p:{individual:4990,family:8990}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{individual:11.99,family:17.99,student:6.99,lite:5.99}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{individual:13.99,family:23.99,student:8.99}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,family:19.99,student:7.99}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{individual:129,family:229}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{individual:149,family:269}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{individual:149,family:269}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{individual:24.90,family:43.90}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{individual:29.99,family:54.99,student:18.99}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{individual:79.99,family:149.99,lite:49.99}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{individual:16.99,family:29.99,student:9.99}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{individual:17.99,family:32.99}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{individual:189,family:399,lite:89}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{individual:1280,family:2280,student:780}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{individual:14900,family:26900}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{individual:15.98,family:27.98}},
+    {c:"Philippines",fl:"🇵🇭",r:"Asia-Pacific",cur:"PHP",sym:"₱",p:{individual:199,family:379}},
+    {c:"Indonesia",fl:"🇮🇩",r:"Asia-Pacific",cur:"IDR",sym:"Rp",p:{individual:59000,family:119000}},
+    {c:"Thailand",fl:"🇹🇭",r:"Asia-Pacific",cur:"THB",sym:"฿",p:{individual:179,family:349,lite:119}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{individual:22.90,family:41.90}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{individual:99.99,family:189.99}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}},
+    {c:"Czech Republic",fl:"🇨🇿",r:"Europe",cur:"CZK",sym:"Kč",p:{individual:299,family:519,student:189}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{individual:34.99,family:64.99}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{individual:34.99,family:64.99}},
+    {c:"Hong Kong",fl:"🇭🇰",r:"Asia-Pacific",cur:"HKD",sym:"HK$",p:{individual:88,family:158,student:53}},
+    {c:"Taiwan",fl:"🇹🇼",r:"Asia-Pacific",cur:"TWD",sym:"NT$",p:{individual:179,family:299}},
+    {c:"Vietnam",fl:"🇻🇳",r:"Asia-Pacific",cur:"VND",sym:"₫",p:{individual:59000,family:119000,lite:39000}},
+    {c:"Pakistan",fl:"🇵🇰",r:"Asia-Pacific",cur:"PKR",sym:"Rs",p:{individual:449,family:849}},
+    {c:"Bangladesh",fl:"🇧🇩",r:"Asia-Pacific",cur:"BDT",sym:"৳",p:{individual:249,family:479,lite:129}},
+    {c:"Sri Lanka",fl:"🇱🇰",r:"Asia-Pacific",cur:"LKR",sym:"Rs",p:{individual:550,family:1050,lite:290}},
+    {c:"Nepal",fl:"🇳🇵",r:"Asia-Pacific",cur:"NPR",sym:"Rs",p:{individual:399,family:799}},
+    {c:"Cambodia",fl:"🇰🇭",r:"Asia-Pacific",cur:"USD",sym:"$",p:{individual:3.49,family:6.99}},
+    {c:"Myanmar",fl:"🇲🇲",r:"Asia-Pacific",cur:"USD",sym:"$",p:{individual:3.49,family:6.99}},
+    {c:"Mongolia",fl:"🇲🇳",r:"Asia-Pacific",cur:"USD",sym:"$",p:{individual:3.49,family:6.99}},
+    {c:"Egypt",fl:"🇪🇬",r:"Middle East & Africa",cur:"EGP",sym:"E£",p:{individual:109,family:209,lite:69}},
+    {c:"Nigeria",fl:"🇳🇬",r:"Middle East & Africa",cur:"NGN",sym:"₦",p:{individual:2900,family:5500,lite:1500}},
+    {c:"Kenya",fl:"🇰🇪",r:"Middle East & Africa",cur:"KES",sym:"KSh",p:{individual:499,family:999,lite:249}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{individual:99.99,family:189.99}},
+    {c:"Ghana",fl:"🇬🇭",r:"Middle East & Africa",cur:"GHS",sym:"₵",p:{individual:29,family:59}},
+    {c:"Jordan",fl:"🇯🇴",r:"Middle East & Africa",cur:"USD",sym:"$",p:{individual:3.99,family:7.99}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{individual:34.99,family:64.99}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{individual:34.99,family:64.99}},
+    {c:"Morocco",fl:"🇲🇦",r:"Middle East & Africa",cur:"MAD",sym:"MAD",p:{individual:39,family:79}},
+    {c:"Ecuador",fl:"🇪🇨",r:"Americas",cur:"USD",sym:"$",p:{individual:4.99,family:9.99}},
+    {c:"Guatemala",fl:"🇬🇹",r:"Americas",cur:"GTQ",sym:"Q",p:{individual:39,family:79}},
+    {c:"Uruguay",fl:"🇺🇾",r:"Americas",cur:"USD",sym:"$",p:{individual:5.99,family:11.99}},
+    {c:"Peru",fl:"🇵🇪",r:"Americas",cur:"PEN",sym:"S/",p:{individual:24.90,family:47.90}},
+    {c:"Romania",fl:"🇷🇴",r:"Europe",cur:"RON",sym:"lei",p:{individual:29.99,family:54.99,student:18.99}},
+    {c:"Hungary",fl:"🇭🇺",r:"Europe",cur:"HUF",sym:"Ft",p:{individual:2490,family:4490,student:1490}},
+    {c:"Greece",fl:"🇬🇷",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:11.99,family:19.99,student:7.99}},
+    {c:"Finland",fl:"🇫🇮",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}},
+    {c:"Slovakia",fl:"🇸🇰",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}},
+    {c:"Croatia",fl:"🇭🇷",r:"Europe",cur:"EUR",sym:"€",p:{individual:12.99,family:21.99,student:7.99}}
+  ]},
+  // ─ AMAZON PRIME ────────────────────────────────────────────────────────
+  {id:"amazon",name:"Amazon Prime",emoji:"📦",cat:"Membership",
+   tiers:[
+     {id:"monthly",name:"Monthly",billing:"monthly"},
+     {id:"annual",name:"Annual",billing:"annual"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{monthly:14.99,annual:139}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{monthly:9.99,annual:99}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{monthly:14.90,annual:149}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{monthly:169,annual:1699}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{monthly:8.99,annual:95}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{monthly:8.99,annual:89.90}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{monthly:6.99,annual:69.90}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{monthly:4.99,annual:49.90}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{monthly:4.99,annual:49.90}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{monthly:5.99,annual:59.90}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{monthly:89,annual:799}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{monthly:79.90,annual:799}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{monthly:10.99,annual:109.90}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{monthly:9.99,annual:79}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{monthly:179,annual:1499}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{monthly:600,annual:5900}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{monthly:4.99,annual:49.90}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{monthly:17.99,annual:179}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{monthly:17.99,annual:179}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{monthly:8.99,annual:89.90}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{monthly:5.99,annual:59.90}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{monthly:3.99,annual:39.90}},
+    {c:"Egypt",fl:"🇪🇬",r:"Middle East & Africa",cur:"EGP",sym:"E£",p:{monthly:59.99,annual:599}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{monthly:99.99,annual:999}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{monthly:9.99,annual:89}},
+    {c:"Hong Kong",fl:"🇭🇰",r:"Asia-Pacific",cur:"HKD",sym:"HK$",p:{monthly:60,annual:588}},
+    {c:"Taiwan",fl:"🇹🇼",r:"Asia-Pacific",cur:"TWD",sym:"NT$",p:{monthly:199,annual:1990}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{monthly:14.99,annual:149}},
+    {c:"Thailand",fl:"🇹🇭",r:"Asia-Pacific",cur:"THB",sym:"฿",p:{monthly:199,annual:1990}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{monthly:3999,annual:39990}},
+    {c:"Colombia",fl:"🇨🇴",r:"Americas",cur:"COP",sym:"$",p:{monthly:19900,annual:199000}},
+    {c:"Chile",fl:"🇨🇱",r:"Americas",cur:"CLP",sym:"$",p:{monthly:4990,annual:49900}}
+  ]},
+  // ─ ChatGPT ─────────────────────────────────────────────────────────────
+  {id:"chatgpt",name:"ChatGPT",emoji:"🤖",cat:"AI",
+   tiers:[
+     {id:"plus",name:"Plus",billing:"monthly"},
+     {id:"pro",name:"Pro",billing:"monthly"},
+     {id:"team",name:"Team (per user)",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{plus:20,pro:200,team:25}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{plus:27.99,pro:280}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{plus:109,pro:1100}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{plus:399,pro:3990}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{plus:16.99,pro:169,team:22}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{plus:23.99,pro:220}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{plus:24.20,pro:220}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{plus:23.00,pro:220}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{plus:23.00,pro:220}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{plus:1800,pro:20000}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{plus:3000,pro:30000}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{plus:32,pro:320}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{plus:27000,pro:270000}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{plus:28.98,pro:289}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{plus:35,pro:350}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{plus:569,pro:5690}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{plus:18000,pro:180000}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{plus:74.99,pro:750}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{plus:74.99,pro:750}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{plus:89,pro:890}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{plus:229,pro:2290}}
+  ]},
+  // ─ CLAUDE ──────────────────────────────────────────────────────────────
+  {id:"claude",name:"Claude",emoji:"🧠",cat:"AI",
+   tiers:[
+     {id:"pro",name:"Pro",billing:"monthly"},
+     {id:"max5",name:"Max (5×)",billing:"monthly"},
+     {id:"max20",name:"Max (20×)",billing:"monthly"},
+     {id:"team",name:"Team (per user)",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{pro:20,max5:100,max20:200,team:25}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{pro:18,max5:90,max20:180,team:22}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{pro:27,max5:135,max20:270,team:34}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{pro:32,max5:160,max20:320,team:40}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{pro:22,max5:110,max20:220,team:28}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{pro:22,max5:110,max20:220,team:28}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{pro:1700,max5:8500,max20:17000,team:2100}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{pro:3000,max5:15000,max20:30000,team:3800}}
+  ]},
+  // ─ GROK ────────────────────────────────────────────────────────────────
+  {id:"grok",name:"Grok (xAI)",emoji:"⚡",cat:"AI",
+   tiers:[
+     {id:"xpremium",name:"X Premium",billing:"monthly"},
+     {id:"xpremiumplus",name:"X Premium+",billing:"monthly"},
+     {id:"supergrok",name:"SuperGrok",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{xpremium:8,xpremiumplus:40,supergrok:30}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{xpremium:9.68,xpremiumplus:35,supergrok:25}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{xpremium:9,xpremiumplus:38,supergrok:28}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{xpremium:9,xpremiumplus:38,supergrok:28}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{xpremium:13,xpremiumplus:63,supergrok:47}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{xpremium:10.68,xpremiumplus:54,supergrok:40}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{xpremium:1380,xpremiumplus:6820,supergrok:5100}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{xpremium:650,xpremiumplus:3250,supergrok:2500}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{xpremium:47,xpremiumplus:234,supergrok:175}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{xpremium:160,xpremiumplus:800,supergrok:600}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{xpremium:200,xpremiumplus:1080,supergrok:800}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{xpremium:11000,xpremiumplus:55000,supergrok:41000}}
+  ]},
+  // ─ MAX (HBO) ───────────────────────────────────────────────────────────
+  {id:"max",name:"Max (HBO)",emoji:"🎬",cat:"Streaming",
+   tiers:[
+     {id:"ads",name:"With Ads",billing:"monthly"},
+     {id:"standard",name:"Standard (Ad-Free)",billing:"monthly"},
+     {id:"premium",name:"Ultimate",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{ads:10.99,standard:18.49,premium:22.99}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{ads:24.90,standard:44.90,premium:69.90}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{ads:119,standard:219,premium:329}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{ads:3999,standard:6999,premium:10999}},
+    {c:"Colombia",fl:"🇨🇴",r:"Americas",cur:"COP",sym:"$",p:{ads:29900,standard:49900,premium:74900}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:18.99}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:18.99}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:18.99}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{ads:5.99,standard:10.99,premium:15.99}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:18.99}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:11.99,premium:15.99}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{ads:24.99,standard:54.99,premium:79.99}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{ads:79,standard:159,premium:219}},
+    {c:"Philippines",fl:"🇵🇭",r:"Asia-Pacific",cur:"PHP",sym:"₱",p:{standard:149,premium:219}},
+    {c:"Indonesia",fl:"🇮🇩",r:"Asia-Pacific",cur:"IDR",sym:"Rp",p:{standard:49000,premium:79000}},
+    {c:"Thailand",fl:"🇹🇭",r:"Asia-Pacific",cur:"THB",sym:"฿",p:{standard:139,premium:219}},
+    {c:"Chile",fl:"🇨🇱",r:"Americas",cur:"CLP",sym:"$",p:{ads:4999,standard:8999,premium:13999}},
+    {c:"Peru",fl:"🇵🇪",r:"Americas",cur:"PEN",sym:"S/",p:{ads:19.90,standard:35.90,premium:54.90}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:18.99}},
+    {c:"Czech Republic",fl:"🇨🇿",r:"Europe",cur:"CZK",sym:"Kč",p:{ads:149,standard:329,premium:449}},
+    {c:"Romania",fl:"🇷🇴",r:"Europe",cur:"RON",sym:"lei",p:{ads:24.99,standard:54.99,premium:74.99}},
+    {c:"Hungary",fl:"🇭🇺",r:"Europe",cur:"HUF",sym:"Ft",p:{ads:2490,standard:5490,premium:7490}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:18.99}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:18.99}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{ads:7.90,standard:17.90,premium:24.90}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{ads:89,standard:179,premium:249}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{ads:59,standard:129,premium:179}},
+    {c:"Finland",fl:"🇫🇮",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:18.99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:18.99}},
+    {c:"Greece",fl:"🇬🇷",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:11.99,premium:15.99}},
+    {c:"Croatia",fl:"🇭🇷",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:11.99,premium:15.99}},
+    {c:"Slovakia",fl:"🇸🇰",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:18.99}},
+    {c:"Bulgaria",fl:"🇧🇬",r:"Europe",cur:"BGN",sym:"лв",p:{ads:9.99,standard:24.99,premium:34.99}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{standard:11.98,premium:18.98}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{standard:17.90,premium:27.90}},
+    {c:"Vietnam",fl:"🇻🇳",r:"Asia-Pacific",cur:"VND",sym:"₫",p:{standard:79000,premium:119000}},
+    {c:"Costa Rica",fl:"🇨🇷",r:"Americas",cur:"CRC",sym:"₡",p:{ads:3999,standard:7999,premium:11999}},
+    {c:"Guatemala",fl:"🇬🇹",r:"Americas",cur:"GTQ",sym:"Q",p:{ads:59,standard:109,premium:159}},
+    {c:"Dominican Republic",fl:"🇩🇴",r:"Americas",cur:"DOP",sym:"RD$",p:{ads:299,standard:599,premium:899}},
+    {c:"Ecuador",fl:"🇪🇨",r:"Americas",cur:"USD",sym:"$",p:{ads:8.99,standard:15.99,premium:22.99}},
+    {c:"Bolivia",fl:"🇧🇴",r:"Americas",cur:"BOB",sym:"Bs.",p:{ads:29,standard:59,premium:89}},
+    {c:"Uruguay",fl:"🇺🇾",r:"Americas",cur:"UYU",sym:"$U",p:{ads:349,standard:699,premium:999}},
+    {c:"Paraguay",fl:"🇵🇾",r:"Americas",cur:"USD",sym:"$",p:{ads:7.99,standard:13.99,premium:19.99}}
+  ]},
+  // ─ GOOGLE ONE ──────────────────────────────────────────────────────────
+  {id:"goog1",name:"Google One",emoji:"☁️",cat:"Cloud Storage",
+   tiers:[
+     {id:"g100",name:"100 GB",billing:"monthly"},
+     {id:"g200",name:"200 GB",billing:"monthly"},
+     {id:"g2tb",name:"2 TB",billing:"monthly"},
+     {id:"gaipro",name:"AI Pro (2 TB)",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{g100:2.79,g200:3.89,g2tb:13.99,gaipro:26.99}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{g100:9.99,g200:14.99,g2tb:44.99}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{g100:21,g200:32,g2tb:99,gaipro:199}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{g100:599,g200:999,g2tb:4499}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{g100:1.59,g200:2.49,g2tb:7.99,gaipro:18.99}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{g100:21,g200:32,g2tb:109,gaipro:219}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{g100:29.99,g200:44.99,g2tb:149.99}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{g100:8.99,g200:13.99,g2tb:44.99,gaipro:89.99}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{g100:2.99,g200:4.49,g2tb:14.99,gaipro:29.99}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{g100:130,g200:210,g2tb:650,gaipro:1300}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{g100:250,g200:380,g2tb:1300,gaipro:2800}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{g100:1200,g200:1900,g2tb:8700,gaipro:17400}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{g100:2.79,g200:3.99,g2tb:13.99,gaipro:27.99}},
+    {c:"Indonesia",fl:"🇮🇩",r:"Asia-Pacific",cur:"IDR",sym:"Rp",p:{g100:19000,g200:29000,g2tb:99000}},
+    {c:"Thailand",fl:"🇹🇭",r:"Asia-Pacific",cur:"THB",sym:"฿",p:{g100:59,g200:89,g2tb:299,gaipro:599}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{g100:3.99,g200:5.99,g2tb:19.99}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{g100:29.99,g200:49.99,g2tb:179.99}},
+    {c:"Hong Kong",fl:"🇭🇰",r:"Asia-Pacific",cur:"HKD",sym:"HK$",p:{g100:8,g200:12,g2tb:43}},
+    {c:"Taiwan",fl:"🇹🇼",r:"Asia-Pacific",cur:"TWD",sym:"NT$",p:{g100:30,g200:49,g2tb:169}},
+    {c:"Philippines",fl:"🇵🇭",r:"Asia-Pacific",cur:"PHP",sym:"₱",p:{g100:39,g200:59,g2tb:179}},
+    {c:"Vietnam",fl:"🇻🇳",r:"Asia-Pacific",cur:"VND",sym:"₫",p:{g100:29000,g200:49000,g2tb:169000}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{g100:3.49,g200:4.99,g2tb:16.99,gaipro:33.99}},
+    {c:"Pakistan",fl:"🇵🇰",r:"Asia-Pacific",cur:"PKR",sym:"₨",p:{g100:200,g200:299,g2tb:999}},
+    {c:"Bangladesh",fl:"🇧🇩",r:"Asia-Pacific",cur:"BDT",sym:"৳",p:{g100:150,g200:230,g2tb:749}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"Finland",fl:"🇫🇮",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99,gaipro:19.99}},
+    {c:"Greece",fl:"🇬🇷",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99}},
+    {c:"Croatia",fl:"🇭🇷",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99}},
+    {c:"Slovakia",fl:"🇸🇰",r:"Europe",cur:"EUR",sym:"€",p:{g100:1.99,g200:2.99,g2tb:9.99}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{g100:2.50,g200:3.90,g2tb:12.99,gaipro:25.99}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{g100:22,g200:33,g2tb:109,gaipro:219}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{g100:15,g200:22,g2tb:79,gaipro:159}},
+    {c:"Hungary",fl:"🇭🇺",r:"Europe",cur:"HUF",sym:"Ft",p:{g100:699,g200:1099,g2tb:3490}},
+    {c:"Bulgaria",fl:"🇧🇬",r:"Europe",cur:"BGN",sym:"лв",p:{g100:3.99,g200:5.99,g2tb:18.99}},
+    {c:"Iceland",fl:"🇮🇸",r:"Europe",cur:"ISK",sym:"kr",p:{g100:279,g200:429,g2tb:1490}},
+    {c:"Czech Republic",fl:"🇨🇿",r:"Europe",cur:"CZK",sym:"Kč",p:{g100:49,g200:79,g2tb:249}},
+    {c:"Romania",fl:"🇷🇴",r:"Europe",cur:"RON",sym:"lei",p:{g100:9.99,g200:14.99,g2tb:49.99}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{g100:7.99,g200:11.99,g2tb:37.99}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{g100:7.99,g200:11.99,g2tb:37.99}},
+    {c:"Israel",fl:"🇮🇱",r:"Middle East & Africa",cur:"ILS",sym:"₪",p:{g100:7.90,g200:11.90,g2tb:37.90}},
+    {c:"Qatar",fl:"🇶🇦",r:"Middle East & Africa",cur:"QAR",sym:"QAR",p:{g100:7.99,g200:11.99,g2tb:37.99}},
+    {c:"Kuwait",fl:"🇰🇼",r:"Middle East & Africa",cur:"KWD",sym:"KD",p:{g100:0.59,g200:0.89,g2tb:2.99}},
+    {c:"Jordan",fl:"🇯🇴",r:"Middle East & Africa",cur:"JOD",sym:"JD",p:{g100:1.49,g200:2.29,g2tb:7.49}},
+    {c:"Morocco",fl:"🇲🇦",r:"Middle East & Africa",cur:"MAD",sym:"MAD",p:{g100:19.99,g200:29.99,g2tb:99.99}},
+    {c:"Nigeria",fl:"🇳🇬",r:"Middle East & Africa",cur:"NGN",sym:"₦",p:{g100:999,g200:1499,g2tb:5499}},
+    {c:"Egypt",fl:"🇪🇬",r:"Middle East & Africa",cur:"EGP",sym:"E£",p:{g100:39.99,g200:59.99,g2tb:199.99}},
+    {c:"Kenya",fl:"🇰🇪",r:"Middle East & Africa",cur:"KES",sym:"KSh",p:{g100:250,g200:380,g2tb:1300}},
+    {c:"Ghana",fl:"🇬🇭",r:"Middle East & Africa",cur:"GHS",sym:"GH₵",p:{g100:25.99,g200:39.99,g2tb:129.99}},
+    {c:"Colombia",fl:"🇨🇴",r:"Americas",cur:"COP",sym:"$",p:{g100:8900,g200:13900,g2tb:43900}},
+    {c:"Chile",fl:"🇨🇱",r:"Americas",cur:"CLP",sym:"$",p:{g100:990,g200:1490,g2tb:4990}},
+    {c:"Peru",fl:"🇵🇪",r:"Americas",cur:"PEN",sym:"S/",p:{g100:7.99,g200:11.99,g2tb:37.99}},
+    {c:"Ecuador",fl:"🇪🇨",r:"Americas",cur:"USD",sym:"$",p:{g100:1.99,g200:2.99,g2tb:9.99}},
+    {c:"Guatemala",fl:"🇬🇹",r:"Americas",cur:"GTQ",sym:"Q",p:{g100:15.99,g200:24.99,g2tb:79.99}},
+    {c:"Dominican Republic",fl:"🇩🇴",r:"Americas",cur:"DOP",sym:"RD$",p:{g100:119,g200:179,g2tb:599}},
+    {c:"Bolivia",fl:"🇧🇴",r:"Americas",cur:"BOB",sym:"Bs.",p:{g100:13.99,g200:21.99,g2tb:69.99}},
+    {c:"Uruguay",fl:"🇺🇾",r:"Americas",cur:"UYU",sym:"$U",p:{g100:79,g200:119,g2tb:399}},
+    {c:"Costa Rica",fl:"🇨🇷",r:"Americas",cur:"CRC",sym:"₡",p:{g100:1090,g200:1690,g2tb:5490}}
+  ]},
+  // ─ COSTCO ──────────────────────────────────────────────────────────────
+  {id:"costco",name:"Costco",emoji:"🛒",cat:"Membership",
+   tiers:[
+     {id:"gold",name:"Gold Star",billing:"annual"},
+     {id:"exec",name:"Executive",billing:"annual"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{gold:65,exec:130}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{gold:65,exec:130}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{gold:600,exec:1200}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{gold:33.60,exec:74.40}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{gold:30}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{gold:36}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{gold:500,exec:500}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{gold:65,exec:130}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{gold:60}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{gold:4840,exec:9900}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{gold:38500,exec:80000}},
+    {c:"Taiwan",fl:"🇹🇼",r:"Asia-Pacific",cur:"TWD",sym:"NT$",p:{gold:1350,exec:3000}},
+    {c:"China",fl:"🇨🇳",r:"Asia-Pacific",cur:"USD",sym:"$",p:{gold:55,exec:55}}
+  ]},
+  // ─ SAM'S CLUB ──────────────────────────────────────────────────────────
+  {id:"samsclub",name:"Sam's Club",emoji:"🏪",cat:"Membership",
+   tiers:[
+     {id:"club",name:"Club",billing:"annual"},
+     {id:"plus",name:"Plus",billing:"annual"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{club:50,plus:110}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{club:599,plus:1299}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{club:199,plus:399}},
+    {c:"China",fl:"🇨🇳",r:"Asia-Pacific",cur:"CNY",sym:"¥",p:{club:260,plus:680}}
+  ]},
+  // ─ TIDAL ───────────────────────────────────────────────────────────────
+  {id:"tidal",name:"Tidal",emoji:"🎧",cat:"Music",
+   tiers:[
+     {id:"individual",name:"Individual",billing:"monthly"},
+     {id:"family",name:"Family",billing:"monthly"},
+     {id:"student",name:"Student",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{individual:10.99,family:16.99,student:5.49}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{individual:13.99,family:21.99,student:6.99}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{individual:10.99,family:15.99,student:4.99}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{individual:15.99,family:23.99,student:7.99}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{individual:15.99,family:23.99,student:7.99}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:10.99,family:16.99,student:5.49}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{individual:10.99,family:16.99,student:5.49}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{individual:10.99,family:16.99,student:5.49}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:10.99,family:16.99,student:5.49}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{individual:10.99,family:16.99,student:5.49}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:10.99,family:16.99}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:10.99,family:16.99}},
+    {c:"Finland",fl:"🇫🇮",r:"Europe",cur:"EUR",sym:"€",p:{individual:10.99,family:16.99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{individual:10.99,family:16.99}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{individual:10.99,family:16.99}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{individual:119,family:179,student:59}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{individual:119,family:179,student:59}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{individual:89,family:129,student:44}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{individual:13.90,family:21.90}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{individual:49.99,family:74.99,student:24.99}},
+    {c:"Czech Republic",fl:"🇨🇿",r:"Europe",cur:"CZK",sym:"Kč",p:{individual:279,family:399}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{individual:21.90,family:32.90,student:10.90}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{individual:99,family:149,student:49}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{individual:1880,family:2900,student:940}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{individual:9900,family:14900}}
+  ]},
+  // ─ NETFLIX ─────────────────────────────────────────────────────────────
+  {id:"netflix",name:"Netflix",emoji:"🎥",cat:"Streaming",
+   tiers:[
+     {id:"ads",name:"Standard w/ Ads",billing:"monthly"},
+     {id:"standard",name:"Standard",billing:"monthly"},
+     {id:"premium",name:"Premium",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{ads:7.99,standard:15.49,premium:22.99}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{ads:5.99,standard:16.99,premium:20.99}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{ads:20.90,standard:39.90,premium:55.90}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{ads:99,standard:219,premium:299}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{ads:1299,standard:2499,premium:3499}},
+    {c:"Colombia",fl:"🇨🇴",r:"Americas",cur:"COP",sym:"$",p:{ads:15900,standard:29900,premium:39900}},
+    {c:"Chile",fl:"🇨🇱",r:"Americas",cur:"CLP",sym:"$",p:{ads:3990,standard:7990,premium:10990}},
+    {c:"Peru",fl:"🇵🇪",r:"Americas",cur:"PEN",sym:"S/",p:{ads:14.90,standard:29.90,premium:39.90}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{ads:4.99,standard:10.99,premium:17.99}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:13.99,premium:17.99}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:13.99,premium:17.99}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.99,standard:12.99,premium:17.99}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.49,standard:12.99,premium:17.99}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.49,standard:13.99,premium:17.99}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:11.99,premium:15.99}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{ads:5.49,standard:13.99,premium:17.99}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:12.99,premium:17.99}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{ads:6.90,standard:17.90,premium:23.90}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{ads:69,standard:149,premium:199}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{ads:99,standard:179,premium:239}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{ads:79,standard:129,premium:179}},
+    {c:"Finland",fl:"🇫🇮",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:13.99,premium:17.99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:10.99,premium:17.99}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{ads:29,standard:49,premium:69}},
+    {c:"Czech Republic",fl:"🇨🇿",r:"Europe",cur:"CZK",sym:"Kč",p:{ads:199,standard:329,premium:449}},
+    {c:"Romania",fl:"🇷🇴",r:"Europe",cur:"RON",sym:"lei",p:{ads:24.99,standard:34.99,premium:47.99}},
+    {c:"Hungary",fl:"🇭🇺",r:"Europe",cur:"HUF",sym:"Ft",p:{ads:2490,standard:4490,premium:6490}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{ads:69.99,standard:139.99,premium:204.99}},
+    {c:"Greece",fl:"🇬🇷",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:11.99,premium:15.99}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{ads:149,standard:499,premium:649}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{ads:790,standard:1590,premium:1980}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{ads:5500,standard:13500,premium:17000}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{ads:7.99,standard:18.99,premium:22.99}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{ads:6.99,standard:19.99,premium:24.99}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{ads:4.99,standard:11.98,premium:16.98}},
+    {c:"Thailand",fl:"🇹🇭",r:"Asia-Pacific",cur:"THB",sym:"฿",p:{standard:280,premium:350}},
+    {c:"Indonesia",fl:"🇮🇩",r:"Asia-Pacific",cur:"IDR",sym:"Rp",p:{ads:85000,standard:186000,premium:228000}},
+    {c:"Philippines",fl:"🇵🇭",r:"Asia-Pacific",cur:"PHP",sym:"₱",p:{standard:369,premium:549}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{standard:35.90,premium:54.90}},
+    {c:"Taiwan",fl:"🇹🇼",r:"Asia-Pacific",cur:"TWD",sym:"NT$",p:{standard:270,premium:390}},
+    {c:"Hong Kong",fl:"🇭🇰",r:"Asia-Pacific",cur:"HKD",sym:"HK$",p:{standard:73,premium:103}},
+    {c:"Vietnam",fl:"🇻🇳",r:"Asia-Pacific",cur:"VND",sym:"₫",p:{ads:60000,standard:180000,premium:260000}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{ads:99,standard:199,premium:259}},
+    {c:"Nigeria",fl:"🇳🇬",r:"Middle East & Africa",cur:"NGN",sym:"₦",p:{standard:18000,premium:25000}},
+    {c:"Egypt",fl:"🇪🇬",r:"Middle East & Africa",cur:"EGP",sym:"E£",p:{standard:195,premium:325}},
+    {c:"Israel",fl:"🇮🇱",r:"Middle East & Africa",cur:"ILS",sym:"₪",p:{standard:39.90,premium:59.90}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{standard:44.99,premium:59.99}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{standard:44.99,premium:59.99}},
+    {c:"Pakistan",fl:"🇵🇰",r:"Asia-Pacific",cur:"PKR",sym:"₨",p:{ads:250,standard:700,premium:1100}},
+    {c:"Bangladesh",fl:"🇧🇩",r:"Asia-Pacific",cur:"BDT",sym:"৳",p:{ads:200,standard:500,premium:800}},
+    {c:"Kenya",fl:"🇰🇪",r:"Middle East & Africa",cur:"KES",sym:"KSh",p:{ads:700,standard:1500,premium:2100}},
+    {c:"Morocco",fl:"🇲🇦",r:"Middle East & Africa",cur:"MAD",sym:"MAD",p:{ads:44.99,standard:99.99,premium:139.99}},
+    {c:"Ghana",fl:"🇬🇭",r:"Middle East & Africa",cur:"GHS",sym:"GH₵",p:{standard:70,premium:100}},
+    {c:"Ecuador",fl:"🇪🇨",r:"Americas",cur:"USD",sym:"$",p:{ads:6.99,standard:12.99,premium:17.99}},
+    {c:"Costa Rica",fl:"🇨🇷",r:"Americas",cur:"CRC",sym:"₡",p:{ads:3499,standard:7499,premium:10999}},
+    {c:"Guatemala",fl:"🇬🇹",r:"Americas",cur:"GTQ",sym:"Q",p:{ads:49,standard:99,premium:149}},
+    {c:"Dominican Republic",fl:"🇩🇴",r:"Americas",cur:"DOP",sym:"RD$",p:{ads:249,standard:499,premium:749}},
+    {c:"Bolivia",fl:"🇧🇴",r:"Americas",cur:"BOB",sym:"Bs.",p:{ads:29,standard:59,premium:89}},
+    {c:"Uruguay",fl:"🇺🇾",r:"Americas",cur:"UYU",sym:"$U",p:{ads:249,standard:499,premium:749}},
+    {c:"Croatia",fl:"🇭🇷",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:11.99,premium:15.99}},
+    {c:"Slovakia",fl:"🇸🇰",r:"Europe",cur:"EUR",sym:"€",p:{ads:4.99,standard:11.99,premium:15.99}},
+    {c:"Bulgaria",fl:"🇧🇬",r:"Europe",cur:"BGN",sym:"лв",p:{ads:7.99,standard:17.99,premium:24.99}},
+    {c:"Iceland",fl:"🇮🇸",r:"Europe",cur:"ISK",sym:"kr",p:{ads:990,standard:2190,premium:2990}},
+    {c:"Jordan",fl:"🇯🇴",r:"Middle East & Africa",cur:"JOD",sym:"JD",p:{standard:4.99,premium:7.99}},
+    {c:"Qatar",fl:"🇶🇦",r:"Middle East & Africa",cur:"QAR",sym:"QAR",p:{standard:39.99,premium:59.99}},
+    {c:"Kuwait",fl:"🇰🇼",r:"Middle East & Africa",cur:"KWD",sym:"KD",p:{standard:3.99,premium:5.99}}
+  ]},
+  // ─ DISNEY+ ─────────────────────────────────────────────────────────────
+  {id:"disney",name:"Disney+",emoji:"✨",cat:"Streaming",
+   tiers:[
+     {id:"basic",name:"Basic (w/ Ads)",billing:"monthly"},
+     {id:"premium",name:"Premium",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{basic:7.99,premium:13.99}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{basic:9.99,premium:13.99}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{basic:27.90,premium:43.90}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{basic:199,premium:299}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{basic:1499,premium:2299}},
+    {c:"Colombia",fl:"🇨🇴",r:"Americas",cur:"COP",sym:"$",p:{basic:19900,premium:29900}},
+    {c:"Chile",fl:"🇨🇱",r:"Americas",cur:"CLP",sym:"$",p:{basic:4999,premium:7999}},
+    {c:"Peru",fl:"🇵🇪",r:"Americas",cur:"PEN",sym:"S/",p:{basic:19.90,premium:29.90}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{basic:4.99,premium:7.99}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{basic:7.90,premium:13.90}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{basic:79,premium:119}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{basic:99,premium:149}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{basic:69,premium:99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{basic:34.99,premium:54.99}},
+    {c:"Romania",fl:"🇷🇴",r:"Europe",cur:"RON",sym:"lei",p:{basic:24.99,premium:34.99}},
+    {c:"Hungary",fl:"🇭🇺",r:"Europe",cur:"HUF",sym:"Ft",p:{basic:2490,premium:3990}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{basic:79.99,premium:139.99}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{premium:299}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{basic:990,premium:1320}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{basic:9900,premium:13900}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{basic:7.99,premium:13.99}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{basic:9.99,premium:14.99}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{basic:11.98,premium:16.98}},
+    {c:"Indonesia",fl:"🇮🇩",r:"Asia-Pacific",cur:"IDR",sym:"Rp",p:{basic:95000,premium:139000}},
+    {c:"Philippines",fl:"🇵🇭",r:"Asia-Pacific",cur:"PHP",sym:"₱",p:{basic:369,premium:459}},
+    {c:"Thailand",fl:"🇹🇭",r:"Asia-Pacific",cur:"THB",sym:"฿",p:{basic:179,premium:279}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{basic:29.90,premium:44.90}},
+    {c:"Taiwan",fl:"🇹🇼",r:"Asia-Pacific",cur:"TWD",sym:"NT$",p:{basic:270,premium:390}},
+    {c:"Hong Kong",fl:"🇭🇰",r:"Asia-Pacific",cur:"HKD",sym:"HK$",p:{basic:73,premium:103}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{basic:119,premium:179}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{basic:29.99,premium:44.99}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{basic:29.99,premium:44.99}},
+    {c:"Israel",fl:"🇮🇱",r:"Middle East & Africa",cur:"ILS",sym:"₪",p:{basic:29.90,premium:44.90}},
+    {c:"Finland",fl:"🇫🇮",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Greece",fl:"🇬🇷",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Czech Republic",fl:"🇨🇿",r:"Europe",cur:"CZK",sym:"Kč",p:{basic:149,premium:249}},
+    {c:"Croatia",fl:"🇭🇷",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Slovakia",fl:"🇸🇰",r:"Europe",cur:"EUR",sym:"€",p:{basic:5.99,premium:11.99}},
+    {c:"Bulgaria",fl:"🇧🇬",r:"Europe",cur:"BGN",sym:"лв",p:{basic:9.99,premium:17.99}},
+    {c:"Iceland",fl:"🇮🇸",r:"Europe",cur:"ISK",sym:"kr",p:{basic:899,premium:1499}},
+    {c:"Vietnam",fl:"🇻🇳",r:"Asia-Pacific",cur:"VND",sym:"₫",p:{basic:59000,premium:99000}},
+    {c:"Pakistan",fl:"🇵🇰",r:"Asia-Pacific",cur:"PKR",sym:"₨",p:{premium:299}},
+    {c:"Egypt",fl:"🇪🇬",r:"Middle East & Africa",cur:"EGP",sym:"E£",p:{premium:120}},
+    {c:"Nigeria",fl:"🇳🇬",r:"Middle East & Africa",cur:"NGN",sym:"₦",p:{premium:4900}},
+    {c:"Kenya",fl:"🇰🇪",r:"Middle East & Africa",cur:"KES",sym:"KSh",p:{premium:1200}},
+    {c:"Morocco",fl:"🇲🇦",r:"Middle East & Africa",cur:"MAD",sym:"MAD",p:{basic:49.99,premium:89.99}},
+    {c:"Ecuador",fl:"🇪🇨",r:"Americas",cur:"USD",sym:"$",p:{basic:7.99,premium:13.99}},
+    {c:"Costa Rica",fl:"🇨🇷",r:"Americas",cur:"CRC",sym:"₡",p:{basic:3999,premium:6999}},
+    {c:"Guatemala",fl:"🇬🇹",r:"Americas",cur:"GTQ",sym:"Q",p:{basic:49,premium:89}},
+    {c:"Bolivia",fl:"🇧🇴",r:"Americas",cur:"BOB",sym:"Bs.",p:{basic:29,premium:49}}
+  ]},
+  // ─ APPLE TV+ ───────────────────────────────────────────────────────────
+  {id:"appletv",name:"Apple TV+",emoji:"🍎",cat:"Streaming",
+   tiers:[
+     {id:"monthly",name:"Monthly",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{monthly:9.99}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{monthly:12.99}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{monthly:21.90}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{monthly:149}},
+    {c:"Colombia",fl:"🇨🇴",r:"Americas",cur:"COP",sym:"$",p:{monthly:21900}},
+    {c:"Chile",fl:"🇨🇱",r:"Americas",cur:"CLP",sym:"$",p:{monthly:5490}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{monthly:1299}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{monthly:8.99}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"Finland",fl:"🇫🇮",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"Greece",fl:"🇬🇷",r:"Europe",cur:"EUR",sym:"€",p:{monthly:9.99}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{monthly:99}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{monthly:99}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{monthly:79}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{monthly:10.90}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{monthly:39.99}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{monthly:99.99}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{monthly:99}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{monthly:900}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{monthly:9900}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{monthly:12.99}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{monthly:13.99}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{monthly:11.98}},
+    {c:"Taiwan",fl:"🇹🇼",r:"Asia-Pacific",cur:"TWD",sym:"NT$",p:{monthly:300}},
+    {c:"Hong Kong",fl:"🇭🇰",r:"Asia-Pacific",cur:"HKD",sym:"HK$",p:{monthly:68}},
+    {c:"Thailand",fl:"🇹🇭",r:"Asia-Pacific",cur:"THB",sym:"฿",p:{monthly:299}},
+    {c:"Indonesia",fl:"🇮🇩",r:"Asia-Pacific",cur:"IDR",sym:"Rp",p:{monthly:59000}},
+    {c:"Philippines",fl:"🇵🇭",r:"Asia-Pacific",cur:"PHP",sym:"₱",p:{monthly:295}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{monthly:29.90}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{monthly:119}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{monthly:36.99}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{monthly:36.99}},
+    {c:"Israel",fl:"🇮🇱",r:"Middle East & Africa",cur:"ILS",sym:"₪",p:{monthly:29.90}},
+    {c:"Nigeria",fl:"🇳🇬",r:"Middle East & Africa",cur:"NGN",sym:"₦",p:{monthly:2900}},
+    {c:"Egypt",fl:"🇪🇬",r:"Middle East & Africa",cur:"EGP",sym:"E£",p:{monthly:120}}
+  ]},
+  // ─ iCLOUD+ ─────────────────────────────────────────────────────────────
+  {id:"icloud",name:"iCloud+",emoji:"🍏",cat:"Cloud Storage",
+   tiers:[
+     {id:"i50",name:"50 GB",billing:"monthly"},
+     {id:"i200",name:"200 GB",billing:"monthly"},
+     {id:"i2tb",name:"2 TB",billing:"monthly"},
+     {id:"i6tb",name:"6 TB",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{i50:1.29,i200:3.99,i2tb:12.99,i6tb:37.99}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{i50:3.50,i200:10.90,i2tb:34.90,i6tb:104.90}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{i50:17,i200:45,i2tb:149,i6tb:449}},
+    {c:"Colombia",fl:"🇨🇴",r:"Americas",cur:"COP",sym:"$",p:{i50:4900,i200:13900,i2tb:43900,i6tb:129900}},
+    {c:"Chile",fl:"🇨🇱",r:"Americas",cur:"CLP",sym:"$",p:{i50:990,i200:2990,i2tb:9990,i6tb:29990}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{i50:299,i200:799,i2tb:2499,i6tb:7499}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{i50:0.79,i200:2.49,i2tb:8.99,i6tb:26.99}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"Finland",fl:"🇫🇮",r:"Europe",cur:"EUR",sym:"€",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{i50:0.99,i200:2.99,i2tb:9.99,i6tb:29.99}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{i50:10,i200:29,i2tb:99,i6tb:299}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{i50:12,i200:35,i2tb:109,i6tb:329}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{i50:9,i200:25,i2tb:79,i6tb:239}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{i50:1.00,i200:3.00,i2tb:10.90,i6tb:31.90}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{i50:4.99,i200:14.99,i2tb:49.99,i6tb:149.99}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{i50:19.99,i200:59.99,i2tb:199.99,i6tb:599.99}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{i50:75,i200:219,i2tb:749,i6tb:2199}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{i50:130,i200:400,i2tb:1300,i6tb:3700}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{i50:1100,i200:3300,i2tb:11100,i6tb:33300}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{i50:1.49,i200:4.49,i2tb:14.99,i6tb:44.99}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{i50:1.49,i200:3.99,i2tb:14.99,i6tb:44.99}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{i50:1.48,i200:3.98,i2tb:12.98,i6tb:37.98}},
+    {c:"Taiwan",fl:"🇹🇼",r:"Asia-Pacific",cur:"TWD",sym:"NT$",p:{i50:30,i200:90,i2tb:300,i6tb:870}},
+    {c:"Hong Kong",fl:"🇭🇰",r:"Asia-Pacific",cur:"HKD",sym:"HK$",p:{i50:8,i200:24,i2tb:78,i6tb:228}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{i50:3.90,i200:9.90,i2tb:39.90,i6tb:119.90}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{i50:19.99,i200:59.99,i2tb:199.99,i6tb:599.99}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{i50:3.99,i200:10.99,i2tb:36.99,i6tb:109.99}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{i50:3.99,i200:10.99,i2tb:36.99,i6tb:109.99}}
+  ]},
+  // ─ MICROSOFT 365 ───────────────────────────────────────────────────────
+  {id:"ms365",name:"Microsoft 365",emoji:"📊",cat:"Productivity",
+   tiers:[
+     {id:"personal",name:"Personal",billing:"monthly"},
+     {id:"family",name:"Family (up to 6)",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{personal:9.99,family:12.99}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{personal:12.99,family:16.99}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{personal:44.90,family:57.90}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{personal:299,family:399}},
+    {c:"Argentina",fl:"🇦🇷",r:"Americas",cur:"ARS",sym:"$",p:{personal:4999,family:6299}},
+    {c:"Colombia",fl:"🇨🇴",r:"Americas",cur:"COP",sym:"$",p:{personal:39900,family:52900}},
+    {c:"Chile",fl:"🇨🇱",r:"Americas",cur:"CLP",sym:"$",p:{personal:6990,family:8990}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{personal:8.99,family:11.99}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{personal:10.99,family:13.99}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{personal:10.99,family:13.99}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{personal:9.99,family:12.99}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{personal:9.99,family:12.99}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{personal:10.99,family:13.99}},
+    {c:"Belgium",fl:"🇧🇪",r:"Europe",cur:"EUR",sym:"€",p:{personal:10.99,family:13.99}},
+    {c:"Austria",fl:"🇦🇹",r:"Europe",cur:"EUR",sym:"€",p:{personal:10.99,family:13.99}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{personal:109,family:139}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{personal:119,family:149}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{personal:79,family:99}},
+    {c:"Finland",fl:"🇫🇮",r:"Europe",cur:"EUR",sym:"€",p:{personal:10.99,family:13.99}},
+    {c:"Ireland",fl:"🇮🇪",r:"Europe",cur:"EUR",sym:"€",p:{personal:10.99,family:13.99}},
+    {c:"Switzerland",fl:"🇨🇭",r:"Europe",cur:"CHF",sym:"CHF",p:{personal:13.00,family:16.00}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{personal:39.99,family:49.99}},
+    {c:"Czech Republic",fl:"🇨🇿",r:"Europe",cur:"CZK",sym:"Kč",p:{personal:279,family:349}},
+    {c:"Romania",fl:"🇷🇴",r:"Europe",cur:"RON",sym:"lei",p:{personal:39.99,family:49.99}},
+    {c:"Hungary",fl:"🇭🇺",r:"Europe",cur:"HUF",sym:"Ft",p:{personal:4490,family:5990}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{personal:149.99,family:189.99}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{personal:420,family:530}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{personal:1490,family:1990}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{personal:11900,family:15900}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{personal:14.99,family:19.99}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{personal:16.99,family:21.99}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{personal:12.98,family:16.98}},
+    {c:"Taiwan",fl:"🇹🇼",r:"Asia-Pacific",cur:"TWD",sym:"NT$",p:{personal:350,family:450}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{personal:39.99,family:49.99}},
+    {c:"Thailand",fl:"🇹🇭",r:"Asia-Pacific",cur:"THB",sym:"฿",p:{personal:349,family:449}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{personal:189,family:229}},
+    {c:"UAE",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"AED",p:{personal:36.99,family:46.99}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"SAR",p:{personal:36.99,family:46.99}},
+    {c:"Israel",fl:"🇮🇱",r:"Middle East & Africa",cur:"ILS",sym:"₪",p:{personal:36.90,family:46.90}}
+  ]},
+  // ─ HULU ────────────────────────────────────────────────────────────────
+  {id:"hulu",name:"Hulu",emoji:"📺",cat:"Streaming",
+   tiers:[
+     {id:"ads",name:"With Ads",billing:"monthly"},
+     {id:"adfree",name:"Ad-Free",billing:"monthly"},
+     {id:"livetv",name:"Live TV + Ads",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{ads:7.99,adfree:17.99,livetv:82.99}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{adfree:1026}}
+  ]},
+  {id:"grammarly",name:"Grammarly",emoji:"✍️",cat:"Productivity",
+   tiers:[
+     {id:"premium",name:"Premium",billing:"monthly"},
+     {id:"business",name:"Business (per seat)",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{premium:30.00,business:25.00}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{premium:40.00,business:33.00}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{premium:149.90,business:124.90}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{premium:549,business:459}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{premium:24.99,business:20.99}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{premium:28.00,business:23.00}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{premium:28.00,business:23.00}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{premium:28.00,business:23.00}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{premium:28.00,business:23.00}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{premium:28.00,business:23.00}},
+    {c:"Sweden",fl:"🇸🇪",r:"Europe",cur:"SEK",sym:"kr",p:{premium:319,business:265}},
+    {c:"Norway",fl:"🇳🇴",r:"Europe",cur:"NOK",sym:"kr",p:{premium:329,business:275}},
+    {c:"Denmark",fl:"🇩🇰",r:"Europe",cur:"DKK",sym:"kr",p:{premium:209,business:174}},
+    {c:"Poland",fl:"🇵🇱",r:"Europe",cur:"PLN",sym:"zł",p:{premium:119,business:99}},
+    {c:"Turkey",fl:"🇹🇷",r:"Europe",cur:"TRY",sym:"₺",p:{premium:449,business:379}},
+    {c:"India",fl:"🇮🇳",r:"Asia-Pacific",cur:"INR",sym:"₹",p:{premium:1499,business:1249}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{premium:44.99,business:37.99}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{premium:49.99,business:41.99}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{premium:4200,business:3500}},
+    {c:"South Korea",fl:"🇰🇷",r:"Asia-Pacific",cur:"KRW",sym:"₩",p:{premium:38000,business:32000}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{premium:40.00,business:33.00}},
+    {c:"Malaysia",fl:"🇲🇾",r:"Asia-Pacific",cur:"MYR",sym:"RM",p:{premium:129,business:109}},
+    {c:"Philippines",fl:"🇵🇭",r:"Asia-Pacific",cur:"PHP",sym:"₱",p:{premium:1699,business:1399}},
+    {c:"Indonesia",fl:"🇮🇩",r:"Asia-Pacific",cur:"IDR",sym:"Rp",p:{premium:449000,business:379000}},
+    {c:"United Arab Emirates",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"د.إ",p:{premium:109,business:91}},
+    {c:"Saudi Arabia",fl:"🇸🇦",r:"Middle East & Africa",cur:"SAR",sym:"﷼",p:{premium:112,business:93}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{premium:549,business:459}},
+    {c:"Nigeria",fl:"🇳🇬",r:"Middle East & Africa",cur:"NGN",sym:"₦",p:{premium:24999,business:20999}}
+  ]}
+]};
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let svc = D.services[0];
+let sort = {col:'country',dir:'asc'};
+let filters = {search:'',region:'',tier:''};
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+const toUSD = (price, cur) => price * (FX[cur] || 1);
+const fmt = n => n < 0.01 ? n.toFixed(4) : n < 10 ? n.toFixed(2) : n.toFixed(2);
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+const CAT_ORDER = ['Streaming','Music','AI','Cloud Storage','Membership','Productivity'];
+const CAT_EMOJI = {Streaming:'🎬',Music:'🎵',AI:'🤖','Cloud Storage':'☁️',Membership:'🛒',Productivity:'📊'};
+let activeCat = '';
+
+function renderTabs(){
+  // Derive unique categories from services
+  const cats = [...new Set(D.services.map(s=>s.cat))];
+  cats.sort((a,b)=>(CAT_ORDER.indexOf(a)===-1?99:CAT_ORDER.indexOf(a))-(CAT_ORDER.indexOf(b)===-1?99:CAT_ORDER.indexOf(b)));
+
+  // If no category filter, show the category of the active service
+  if(!activeCat) activeCat = svc.cat;
+
+  // Render category pills
+  document.getElementById('tab-cats').innerHTML =
+    `<button class="cat-pill${activeCat===''?' active':''}" onclick="filterCat('')">All</button>` +
+    cats.map(c=>`<button class="cat-pill${activeCat===c?' active':''}" onclick="filterCat('${c}')">${CAT_EMOJI[c]||'📋'} ${c}</button>`).join('');
+
+  // Filter services by active category
+  const visible = activeCat ? D.services.filter(s=>s.cat===activeCat) : D.services;
+
+  // Render service tabs
+  document.getElementById('tab-items').innerHTML = visible.map(s=>{
+    const idx = D.services.indexOf(s);
+    const b = brand(s.id);
+    const active = s===svc;
+    const style = active ? `style="color:${b.color};border-bottom-color:${b.color}"` : '';
+    return `<button class="tab${active?' active':''}" onclick="selectSvc(${idx})" ${style}>${s.emoji} ${s.name}</button>`;
+  }).join('');
+}
+
+function filterCat(cat){
+  activeCat = cat;
+  // If current service not in new category, switch to first in category
+  const visible = cat ? D.services.filter(s=>s.cat===cat) : D.services;
+  if(visible.length && !visible.includes(svc)){
+    selectSvc(D.services.indexOf(visible[0]));
+  } else {
+    renderTabs();
+  }
+}
+
+function selectSvc(i){
+  svc = D.services[i];
+  filters.tier = '';
+  activeCat = svc.cat;
+  const b = brand(svc.id);
+  document.documentElement.style.setProperty('--brand', b.color);
+  document.documentElement.style.setProperty('--brand-bg', b.bg);
+  renderTabs();
+  renderTierFilter();
+  render();
+}
+
+function renderTierFilter(){
+  document.getElementById('tierFilter').innerHTML =
+    '<option value="">All Tiers</option>' +
+    svc.tiers.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+}
+
+function visibleTiers(){
+  return filters.tier ? svc.tiers.filter(t=>t.id===filters.tier) : svc.tiers;
+}
+
+function filteredCountries(){
+  const q = filters.search.toLowerCase();
+  return svc.countries.filter(c=>{
+    if(q && !c.c.toLowerCase().includes(q)) return false;
+    if(filters.region && c.r !== filters.region) return false;
+    return true;
+  });
+}
+
+function render(){
+  const tiers = visibleTiers();
+  const countries = filteredCountries();
+
+  // min/max per tier (USD)
+  const mm = {};
+  tiers.forEach(t=>{
+    let mn=Infinity,mx=-Infinity;
+    countries.forEach(c=>{
+      const lp = c.p[t.id];
+      if(lp!=null){const u=toUSD(lp,c.cur);if(u<mn)mn=u;if(u>mx)mx=u;}
+    });
+    mm[t.id]={min:mn,max:mx};
+  });
+
+  // sort
+  const sorted = [...countries].sort((a,b)=>{
+    if(sort.col==='country'){
+      return sort.dir==='asc'?a.c.localeCompare(b.c):b.c.localeCompare(a.c);
+    }
+    const ua = a.p[sort.col]!=null?toUSD(a.p[sort.col],a.cur):Infinity;
+    const ub = b.p[sort.col]!=null?toUSD(b.p[sort.col],b.cur):Infinity;
+    return sort.dir==='asc'?ua-ub:ub-ua;
+  });
+
+  // header
+  const billing_note = id => {
+    const t = svc.tiers.find(t=>t.id===id);
+    return t && t.billing==='annual' ? '<div class="annual-note">per year</div>' : '';
+  };
+  document.getElementById('thead').innerHTML = `<tr>
+    <th onclick="setSort('country')" class="${sort.col==='country'?'s'+sort.dir:''}">Country</th>
+    ${tiers.map(t=>`<th onclick="setSort('${t.id}')" class="${sort.col===t.id?'s'+sort.dir:''}">${t.name}${billing_note(t.id)}</th>`).join('')}
+  </tr>`;
+
+  // body
+  if(!sorted.length){
+    document.getElementById('tbody').innerHTML=`<tr><td colspan="${tiers.length+1}" class="no-res">No countries match your filters.</td></tr>`;
+    return;
+  }
+  document.getElementById('tbody').innerHTML = sorted.map(c=>`
+    <tr>
+      <td><div class="cc"><span class="fl">${c.fl}</span>${c.c}<span class="rtag">${c.r}</span></div></td>
+      ${tiers.map(t=>{
+        const lp = c.p[t.id];
+        if(lp==null) return `<td><span class="na">N/A</span></td>`;
+        const u = toUSD(lp, c.cur);
+        const {min,max} = mm[t.id];
+        const cls = Math.abs(u-min)<0.001?'cg':Math.abs(u-max)<0.001?'cr':'';
+        return `<td class="${cls}"><div class="pusd">$${fmt(u)}</div><div class="ploc">${c.sym}${lp.toLocaleString()} ${c.cur}</div></td>`;
+      }).join('')}
+    </tr>
+  `).join('');
+
+  renderStats(sorted, tiers, mm);
+}
+
+function renderStats(countries, tiers, mm){
+  const el = document.getElementById('stats');
+  if(!countries.length){el.innerHTML='';return;}
+  const b = brand(svc.id);
+  el.style.background = `linear-gradient(135deg, ${b.bg}, #eef1f8)`;
+  el.style.borderLeft = `3px solid ${b.color}`;
+  const parts = tiers.map(t=>{
+    const {min,max} = mm[t.id];
+    if(!isFinite(min)) return '';
+    const cheapC = countries.find(c=>c.p[t.id]!=null&&Math.abs(toUSD(c.p[t.id],c.cur)-min)<0.001);
+    const expC   = countries.find(c=>c.p[t.id]!=null&&Math.abs(toUSD(c.p[t.id],c.cur)-max)<0.001);
+    return `<div class="stat-item" style="border-color:${b.color}22">
+      <span class="stat-lbl" style="color:${b.color};font-weight:600">${t.name}:</span>
+      <span class="stat-val g">${cheapC?cheapC.fl+' '+cheapC.c:''} $${fmt(min)}</span>
+      <span class="stat-lbl">→</span>
+      <span class="stat-val r">${expC?expC.fl+' '+expC.c:''} $${fmt(max)}</span>
+    </div>`;
+  }).join('');
+  el.innerHTML = parts +
+    `<div class="legend"><span><span class="leg-dot leg-g"></span>Cheapest</span><span><span class="leg-dot leg-r"></span>Most Expensive</span></div>`;
+}
+
+function setSort(col){
+  sort = sort.col===col ? {col,dir:sort.dir==='asc'?'desc':'asc'} : {col,dir:'asc'};
+  render();
+}
+
+// ── MODAL HELPERS ─────────────────────────────────────────────────────────
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function openModal(id){document.getElementById(id).classList.add('open')}
+
+// ── ADD SERVICE ───────────────────────────────────────────────────────────
+function addTierRow(){
+  const row = document.createElement('div');
+  row.className='tier-row';
+  row.innerHTML=`<input placeholder="Tier name" class="ti-name"><select class="ti-bill"><option value="monthly">Monthly</option><option value="annual">Annual</option></select><button class="bicon" onclick="removeTier(this)">×</button>`;
+  document.getElementById('ns-tiers').appendChild(row);
+}
+function removeTier(btn){btn.parentElement.remove()}
+
+function openAddService(){
+  document.getElementById('ns-name').value='';
+  document.getElementById('ns-emoji').value='';
+  document.getElementById('ns-tiers').innerHTML=`<div class="tier-row"><input placeholder="Tier name e.g. Individual" class="ti-name"><select class="ti-bill"><option value="monthly">Monthly</option><option value="annual">Annual</option></select><button class="bicon" onclick="removeTier(this)">×</button></div>`;
+  openModal('moService');
+}
+
+function saveService(){
+  const name = document.getElementById('ns-name').value.trim();
+  const emoji = document.getElementById('ns-emoji').value.trim()||'📋';
+  const cat = document.getElementById('ns-cat').value;
+  const rows = document.querySelectorAll('#ns-tiers .tier-row');
+  const tiers = [...rows].map(r=>({
+    id: r.querySelector('.ti-name').value.trim().toLowerCase().replace(/\s+/g,'-'),
+    name: r.querySelector('.ti-name').value.trim(),
+    billing: r.querySelector('.ti-bill').value
+  })).filter(t=>t.name);
+  if(!name||!tiers.length){alert('Please enter a service name and at least one tier.');return;}
+  D.services.push({id:name.toLowerCase().replace(/\s+/g,'-'),name,emoji,cat,tiers,countries:[]});
+  svc = D.services[D.services.length-1];
+  closeModal('moService');
+  renderTabs();
+  renderTierFilter();
+  render();
+}
+
+// ── ADD COUNTRY ───────────────────────────────────────────────────────────
+function openAddCountry(){
+  document.getElementById('moCountryTitle').textContent=`🌍 Add Country — ${svc.name}`;
+  ['nc-name','nc-flag','nc-curr','nc-sym'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('nc-prices').innerHTML = svc.tiers.map(t=>`
+    <div class="price-row">
+      <div><label>${t.name} (${t.billing})</label><input class="nc-price" data-tier="${t.id}" placeholder="0.00" type="number" step="0.01"></div>
+    </div>
+  `).join('');
+  openModal('moCountry');
+}
+
+function saveCountry(){
+  const name = document.getElementById('nc-name').value.trim();
+  const flag = document.getElementById('nc-flag').value.trim()||'🏳️';
+  const region = document.getElementById('nc-region').value;
+  const cur = document.getElementById('nc-curr').value.trim().toUpperCase()||'USD';
+  const sym = document.getElementById('nc-sym').value.trim()||'$';
+  if(!name){alert('Please enter a country name.');return;}
+  const p = {};
+  document.querySelectorAll('.nc-price').forEach(inp=>{
+    const v = parseFloat(inp.value);
+    if(!isNaN(v)&&v>0) p[inp.dataset.tier]=v;
+  });
+  svc.countries.push({c:name,fl:flag,r:region,cur,sym,p});
+  closeModal('moCountry');
+  render();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+document.getElementById('search').addEventListener('input',e=>{filters.search=e.target.value;render();});
+document.getElementById('regionFilter').addEventListener('change',e=>{filters.region=e.target.value;render();});
+document.getElementById('tierFilter').addEventListener('change',e=>{filters.tier=e.target.value;render();});
+document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+const initBrand = brand(svc.id);
+document.documentElement.style.setProperty('--brand', initBrand.color);
+document.documentElement.style.setProperty('--brand-bg', initBrand.bg);
+renderTabs();
+renderTierFilter();
+render();
+
+// ── LIVE FX RATES (auto-updates exchange rates on page load) ───────────────
+async function fetchLiveFX(){
+  const badge = document.getElementById('fx-badge');
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(()=>ctrl.abort(), 5000);
+    const r = await fetch('https://open.er-api.com/v6/latest/USD', {signal:ctrl.signal});
+    clearTimeout(tid);
+    const d = await r.json();
+    if(d.rates && d.result==='success'){
+      // API returns USD→foreign; we need foreign→USD (invert)
+      Object.keys(d.rates).forEach(cur=>{ if(cur!=='USD') FX[cur]=1/d.rates[cur]; });
+      const ts = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+      badge.textContent='🟢 FX: Live ('+ts+')';
+      badge.classList.add('fx-live');
+      render(); // re-render with fresh rates
+    }
+  } catch(e) {
+    badge.textContent='📅 FX: Mar 2026 (offline)';
+  }
+}
+fetchLiveFX();
+</script>
 </body>
 </html>
