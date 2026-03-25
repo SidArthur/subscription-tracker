@@ -188,7 +188,7 @@ tr:last-child td:last-child{border-radius:0 0 var(--radius) 0}
       <label>Category</label>
       <select id="ns-cat">
         <option>Streaming</option><option>Music</option><option>Cloud Storage</option>
-        <option>AI</option><option>Membership</option><option>Other</option>
+        <option>AI</option><option>Membership</option><option>Smart Home</option><option>Other</option>
       </select>
     </div>
     <div class="fg">
@@ -1053,6 +1053,33 @@ const D = {
     {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{ads:7.99,adfree:17.99,livetv:82.99}},
     {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{adfree:1026}}
   ]},
+  // ─ REMOTELOCK ──────────────────────────────────────────────────────────
+  {id:"remotelock",name:"RemoteLock",emoji:"🔐",cat:"Smart Home",
+   tiers:[
+     {id:"starter",name:"Starter (per door)",billing:"monthly"},
+     {id:"plus",name:"Plus (per door)",billing:"monthly"}
+   ],
+   countries:[
+    {c:"United States",fl:"🇺🇸",r:"Americas",cur:"USD",sym:"$",p:{starter:5,plus:10}},
+    {c:"Canada",fl:"🇨🇦",r:"Americas",cur:"CAD",sym:"CA$",p:{starter:7,plus:14}},
+    {c:"Mexico",fl:"🇲🇽",r:"Americas",cur:"MXN",sym:"MX$",p:{starter:90,plus:180}},
+    {c:"Brazil",fl:"🇧🇷",r:"Americas",cur:"BRL",sym:"R$",p:{starter:25,plus:50}},
+    {c:"United Kingdom",fl:"🇬🇧",r:"Europe",cur:"GBP",sym:"£",p:{starter:4,plus:8}},
+    {c:"Germany",fl:"🇩🇪",r:"Europe",cur:"EUR",sym:"€",p:{starter:5,plus:9}},
+    {c:"France",fl:"🇫🇷",r:"Europe",cur:"EUR",sym:"€",p:{starter:5,plus:9}},
+    {c:"Spain",fl:"🇪🇸",r:"Europe",cur:"EUR",sym:"€",p:{starter:5,plus:9}},
+    {c:"Italy",fl:"🇮🇹",r:"Europe",cur:"EUR",sym:"€",p:{starter:5,plus:9}},
+    {c:"Netherlands",fl:"🇳🇱",r:"Europe",cur:"EUR",sym:"€",p:{starter:5,plus:9}},
+    {c:"Portugal",fl:"🇵🇹",r:"Europe",cur:"EUR",sym:"€",p:{starter:5,plus:9}},
+    {c:"Australia",fl:"🇦🇺",r:"Asia-Pacific",cur:"AUD",sym:"A$",p:{starter:8,plus:15}},
+    {c:"New Zealand",fl:"🇳🇿",r:"Asia-Pacific",cur:"NZD",sym:"NZ$",p:{starter:8,plus:16}},
+    {c:"Japan",fl:"🇯🇵",r:"Asia-Pacific",cur:"JPY",sym:"¥",p:{starter:740,plus:1480}},
+    {c:"Singapore",fl:"🇸🇬",r:"Asia-Pacific",cur:"SGD",sym:"S$",p:{starter:7,plus:14}},
+    {c:"Thailand",fl:"🇹🇭",r:"Asia-Pacific",cur:"THB",sym:"฿",p:{starter:175,plus:350}},
+    {c:"United Arab Emirates",fl:"🇦🇪",r:"Middle East & Africa",cur:"AED",sym:"د.إ",p:{starter:18,plus:37}},
+    {c:"South Africa",fl:"🇿🇦",r:"Middle East & Africa",cur:"ZAR",sym:"R",p:{starter:90,plus:180}}
+  ]},
+  // ─ GRAMMARLY ───────────────────────────────────────────────────────────
   {id:"grammarly",name:"Grammarly",emoji:"✍️",cat:"Productivity",
    tiers:[
      {id:"premium",name:"Premium",billing:"monthly"},
@@ -1100,8 +1127,8 @@ const toUSD = (price, cur) => price * (FX[cur] || 1);
 const fmt = n => n < 0.01 ? n.toFixed(4) : n < 10 ? n.toFixed(2) : n.toFixed(2);
 
 // ── RENDER ────────────────────────────────────────────────────────────────
-const CAT_ORDER = ['Streaming','Music','AI','Cloud Storage','Membership','Productivity'];
-const CAT_EMOJI = {Streaming:'🎬',Music:'🎵',AI:'🤖','Cloud Storage':'☁️',Membership:'🛒',Productivity:'📊'};
+const CAT_ORDER = ['Streaming','Music','AI','Cloud Storage','Membership','Productivity','Smart Home'];
+const CAT_EMOJI = {Streaming:'🎬',Music:'🎵',AI:'🤖','Cloud Storage':'☁️',Membership:'🛒',Productivity:'📊','Smart Home':'🔐'};
 let activeCat = '';
 
 function renderTabs(){
